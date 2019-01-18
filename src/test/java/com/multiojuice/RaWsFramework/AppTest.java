@@ -1,4 +1,4 @@
-package com.multiojuice.RaWS-framework;
+package com.multiojuice.RaWsFramework;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
