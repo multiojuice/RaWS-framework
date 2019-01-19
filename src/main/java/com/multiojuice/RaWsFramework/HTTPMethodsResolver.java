@@ -1,55 +1,76 @@
 package com.multiojuice.RaWsFramework;
 
 public class HTTPMethodsResolver implements Resolver {
-    private Resolver GET;
-    private Resolver POST;
-    private Resolver PUT;
-    private Resolver PATCH;
-    private Resolver DELETE;
+    private Resolver getResolver;
+    private Resolver postResolver;
+    private Resolver putResolver;
+    private Resolver patchResolver;
+    private Resolver deleteResolver;
 
     @Override
     public void resolve(RequestType requestType) {
-
+        switch (requestType) {
+            case GET:
+                if (getResolver != null)
+                getResolver.resolve(requestType);
+                break;
+            case PUT:
+                if (putResolver != null)
+                putResolver.resolve(requestType);
+                break;
+            case POST:
+                if (postResolver != null)
+                postResolver.resolve(requestType);
+                break;
+            case PATCH:
+                if (patchResolver != null)
+                patchResolver.resolve(requestType);
+                break;
+            case DELETE:
+                if (deleteResolver != null)
+                deleteResolver.resolve(requestType);
+                break;
+        }
     }
 
-    public Resolver getGET() {
-        return GET;
+    public Resolver getGetResolver() {
+        return getResolver;
     }
 
-    public void setGET(Resolver GET) {
-        this.GET = GET;
+    public void setGetResolver(Resolver getResolver) {
+        this.getResolver = getResolver;
     }
 
-    public Resolver getPOST() {
-        return POST;
+    public Resolver getPostResolver() {
+        return postResolver;
     }
 
-    public void setPOST(Resolver POST) {
-        this.POST = POST;
+    public void setPostResolver(Resolver postResolver) {
+        this.postResolver = postResolver;
     }
 
-    public Resolver getPUT() {
-        return PUT;
+    public Resolver getPutResolver() {
+        return putResolver;
     }
 
-    public void setPUT(Resolver PUT) {
-        this.PUT = PUT;
+    public void setPutResolver(Resolver putResolver) {
+        this.putResolver = putResolver;
     }
 
-    public Resolver getPATCH() {
-        return PATCH;
+    public Resolver getPatchResolver() {
+        return patchResolver;
     }
 
-    public void setPATCH(Resolver PATCH) {
-        this.PATCH = PATCH;
+    public void setPatchResolver(Resolver patchResolver) {
+        this.patchResolver = patchResolver;
     }
 
-    public Resolver getDELETE() {
-        return DELETE;
+    public Resolver getDeleteResolver() {
+        return deleteResolver;
     }
 
-    public void setDELETE(Resolver DELETE) {
-        this.DELETE = DELETE;
+    public void setDeleteResolver(Resolver deleteResolver) {
+        this.deleteResolver = deleteResolver;
     }
 }
 

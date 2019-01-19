@@ -33,7 +33,7 @@ public class RaWsApp extends Thread {
                 String[] splitLine = line.split("\\s+");
 
                 Resolver neededResolver = endpoints.get(splitLine[1]);
-                CallResolver callResolver = new CallResolver(neededResolver);
+                CallResolver callResolver = new CallResolver(neededResolver, RequestType.POST);
                 callResolver.start();
 
                 System.out.println("Got a request");
