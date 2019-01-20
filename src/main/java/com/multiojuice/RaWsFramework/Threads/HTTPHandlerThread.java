@@ -27,13 +27,16 @@ public class HTTPHandlerThread extends Thread{
 
     @Override
     public void run() {
-        super.run();
         while (true) {
             try (Socket socket = server.accept()) {
                 InputStreamReader isr = new InputStreamReader(socket.getInputStream());
                 BufferedReader reader = new BufferedReader(isr);
 
                 String line = reader.readLine();
+                while (line != null) {
+                    System.out.println(line);
+                    line = reader.readLine();
+                }
                 String[] splitLine = line.split("\\s+");
                 RequestType currentRequestType = getRequestTypeFromString(splitLine[0]);
 
