@@ -1,4 +1,6 @@
-package com.multiojuice.RaWsFramework;
+package com.multiojuice.RaWsFramework.Resolvers;
+
+import com.multiojuice.RaWsFramework.RequestType;
 
 public class CallResolver extends Thread {
     private Resolver resolver;
