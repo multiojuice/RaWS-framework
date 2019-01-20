@@ -1,76 +1,46 @@
 package com.multiojuice.RaWsFramework;
 
 public class HTTPMethodsResolver implements Resolver {
-    private Resolver getResolver;
-    private Resolver postResolver;
-    private Resolver putResolver;
-    private Resolver patchResolver;
-    private Resolver deleteResolver;
-
     @Override
     public void resolve(RequestType requestType) {
         switch (requestType) {
             case GET:
-                if (getResolver != null)
-                getResolver.resolve(requestType);
+                getResolve();
                 break;
             case PUT:
-                if (putResolver != null)
-                putResolver.resolve(requestType);
+                putResolve();
                 break;
             case POST:
-                if (postResolver != null)
-                postResolver.resolve(requestType);
+                postResolve();
                 break;
             case PATCH:
-                if (patchResolver != null)
-                patchResolver.resolve(requestType);
+                patchResolve();
                 break;
             case DELETE:
-                if (deleteResolver != null)
-                deleteResolver.resolve(requestType);
+                deleteResolve();
                 break;
         }
     }
 
-    public Resolver getGetResolver() {
-        return getResolver;
+    public void getResolve() {
+        System.out.println("No custom GET resolve written for this endpoint");
     }
 
-    public void setGetResolver(Resolver getResolver) {
-        this.getResolver = getResolver;
+    public void putResolve() {
+        System.out.println("No custom PUT resolve written for this endpoint");
     }
 
-    public Resolver getPostResolver() {
-        return postResolver;
+    public void postResolve() {
+        System.out.println("No custom POST resolve written for this endpoint");
     }
 
-    public void setPostResolver(Resolver postResolver) {
-        this.postResolver = postResolver;
+    public void patchResolve() {
+        System.out.println("No custom PATCH resolve written for this endpoint");
     }
 
-    public Resolver getPutResolver() {
-        return putResolver;
+    public void deleteResolve() {
+        System.out.println("No custom DELETE resolve written for this endpoint");
     }
 
-    public void setPutResolver(Resolver putResolver) {
-        this.putResolver = putResolver;
-    }
-
-    public Resolver getPatchResolver() {
-        return patchResolver;
-    }
-
-    public void setPatchResolver(Resolver patchResolver) {
-        this.patchResolver = patchResolver;
-    }
-
-    public Resolver getDeleteResolver() {
-        return deleteResolver;
-    }
-
-    public void setDeleteResolver(Resolver deleteResolver) {
-        this.deleteResolver = deleteResolver;
-    }
 }
 
