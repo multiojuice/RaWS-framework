@@ -1,4 +1,4 @@
-package com.multiojuice.RaWsFramework.Threads;
+package com.multiojuice.RaWsFramework.Controllers;
 
 import com.multiojuice.RaWsFramework.RequestType;
 import com.multiojuice.RaWsFramework.Resolvers.CallResolver;
@@ -10,12 +10,12 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
 
-public class HTTPHandlerThread extends Thread{
+public class HTTPController extends Thread{
 
     private ServerSocket server;
     private HashMap<String, Resolver> endpoints;
 
-    public HTTPHandlerThread(HashMap<String, Resolver> newEndpoints) {
+    public HTTPController(HashMap<String, Resolver> newEndpoints) {
         endpoints = newEndpoints;
         try {
             server = new ServerSocket(8080);

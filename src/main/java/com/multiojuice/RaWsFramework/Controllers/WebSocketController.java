@@ -1,4 +1,4 @@
-package com.multiojuice.RaWsFramework.Threads;
+package com.multiojuice.RaWsFramework.Controllers;
 
 import com.multiojuice.RaWsFramework.Resolvers.Resolver;
 
@@ -10,11 +10,11 @@ import java.security.MessageDigest;
 import java.util.Base64;
 import java.util.HashMap;
 
-public class WebSocketHandlerThread extends Thread {
+public class WebSocketController extends Thread {
     private ServerSocket server;
     private HashMap<String, Resolver> protocols;
 
-    public WebSocketHandlerThread(HashMap<String, Resolver> newProtocols) {
+    public WebSocketController(HashMap<String, Resolver> newProtocols) {
         protocols = newProtocols;
         try {
             server = new ServerSocket(1337);
