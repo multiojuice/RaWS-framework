@@ -2,7 +2,11 @@ package com.multiojuice.RaWsFramework.Resolvers;
 
 import com.multiojuice.RaWsFramework.RequestType;
 
+import java.net.Socket;
+
 public class HTTPMethodsResolver implements Resolver {
+    private Socket socket;
+
     @Override
     public void resolve(RequestType requestType) {
         switch (requestType) {
@@ -22,6 +26,14 @@ public class HTTPMethodsResolver implements Resolver {
                 deleteResolve();
                 break;
         }
+    }
+
+    public void setSocket(Socket socket) {
+        this.socket = socket;
+    }
+
+    public Socket getSocket() {
+        return socket;
     }
 
     public void getResolve() {

@@ -6,12 +6,12 @@ import com.multiojuice.RaWsFramework.Resolvers.Resolver;
 
 import java.util.HashMap;
 
-public class RaWsApp extends Thread {
+public class RaWsApp implements Runnable {
     private HashMap<String, Resolver> httpEndpoints;
-    private HTTPController httpController;
+    private Thread httpController;
 
     private HashMap<String, Resolver> webSocketProtocols;
-    private WebSocketController webSocketController;
+    private Thread webSocketController;
 
     public RaWsApp(HashMap<String, Resolver> newHTTPEndpoints, HashMap<String, Resolver> newWebSocketProtocols) {
             httpEndpoints = newHTTPEndpoints;
@@ -20,12 +20,14 @@ public class RaWsApp extends Thread {
 
     public void run() {
         if(httpEndpoints != null) {
-            httpController = new HTTPController(httpEndpoints);
+            HTTPController httpControllerInstance = new HTTPController(httpEndpoints);
+            httpController = new Thread(httpControllerInstance);
             httpController.start();
         }
 
         if(webSocketProtocols != null) {
-           webSocketController = new WebSocketController(webSocketProtocols);
+           WebSocketController webSocketControllerInstance = new WebSocketController(webSocketProtocols);
+           webSocketController = new Thread(webSocketControllerInstance);
            webSocketController.start();
         }
     }

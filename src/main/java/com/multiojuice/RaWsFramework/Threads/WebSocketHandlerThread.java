@@ -4,62 +4,48 @@ import com.multiojuice.RaWsFramework.Resolvers.Resolver;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.net.ServerSocket;
 import java.net.Socket;
 import java.security.MessageDigest;
 import java.util.Base64;
 import java.util.HashMap;
 
 public class WebSocketHandlerThread extends Thread {
-    private ServerSocket server;
-    private HashMap<String, Resolver> protocols;
-
-    public WebSocketHandlerThread(HashMap<String, Resolver> newProtocols) {
-        protocols = newProtocols;
+    private Socket socket;
+    private Resolver protocolResolver;
+    private HashMap<String, String> headers;
+    private boolean isConnected;
+    private BufferedReader reader;
+    public WebSocketHandlerThread(Socket socket, Resolver protocolResolver, HashMap<String, String> headers) {
+        this.socket = socket;
+        this.protocolResolver = protocolResolver;
+        this.headers = headers;
         try {
-            server = new ServerSocket(1337);
-        } catch(Exception e) {
-            System.out.println("Error creating web-socket server");
+            InputStreamReader isr = new InputStreamReader(this.socket.getInputStream());
+            this.reader = new BufferedReader(isr);
+        } catch (Exception e) {
+            System.out.println(e);
         }
+        this.isConnected = true;
     }
 
     @Override
     public void run() {
-        while (true) {
-            try (Socket socket = server.accept()) {
-                InputStreamReader isr = new InputStreamReader(socket.getInputStream());
-                BufferedReader reader = new BufferedReader(isr);
-                getAcceptFromKey("dGhlIHNhbXBsZSBub25jZQ==");
-
-                String line = reader.readLine();
-                while (line != null) {
-                    System.out.println(line);
-                    line = reader.readLine();
-                }
+        if (headers.containsKey("Sec-WebSocket-Key")) {
+            returnHandshake();
+            while (isConnected) {
 
                 System.out.println("got a WebSocket request");
-            } catch (Exception e) {
-                System.out.println(e);
             }
+        } else {
+            System.out.println("Return something that says its not a websocket");
         }
     }
 
+    private void returnHandshake() {
+        String acceptKey = getAcceptFromKey(headers.get("Sec-WebSocket-Key"));
 
-    private HashMap<String, String> getHeadersFromBR(BufferedReader reader) {
-        HashMap<String, String> headers = new HashMap<>();
-
-        try {
-            String line = reader.readLine();
-            while (line != null && !line.equals("")) {
-                String[] splitLine = line.split(": ");
-                headers.put(splitLine[0], splitLine[1]);
-                line = reader.readLine();
-            }
-        } catch (Exception e) {
-            System.out.println(e);
-        }
-        return headers;
     }
+
 
     private String getAcceptFromKey(String key) {
         String concatKey = key + "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
@@ -72,7 +58,6 @@ public class WebSocketHandlerThread extends Thread {
             System.out.println(e);
         }
 
-        System.out.println(acceptKey);
         return acceptKey;
     }
 }
