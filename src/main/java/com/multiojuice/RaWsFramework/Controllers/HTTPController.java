@@ -1,11 +1,10 @@
 package com.multiojuice.RaWsFramework.Controllers;
 
 import com.multiojuice.RaWsFramework.RequestType;
-import com.multiojuice.RaWsFramework.Resolvers.CallResolver;
 import com.multiojuice.RaWsFramework.Resolvers.Resolver;
+import com.multiojuice.RaWsFramework.Threads.HTTPHandlerThread;
 
 import java.io.BufferedReader;
-import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
@@ -29,22 +28,9 @@ public class HTTPController implements Runnable{
     public void run() {
         while (true) {
             try (Socket socket = server.accept()) {
-                InputStreamReader isr = new InputStreamReader(socket.getInputStream());
-                BufferedReader reader = new BufferedReader(isr);
-
-
-                String line = reader.readLine();
-                String[] splitLine = line.split("\\s+");
-                RequestType currentRequestType = getRequestTypeFromString(splitLine[0]);
-
-                getHeadersFromBR(reader);
-                Resolver neededResolver = endpoints.get(splitLine[1]);
-                neededResolver.setSocket(socket);
-                System.out.println(endpoints);
-                CallResolver callResolver = new CallResolver(neededResolver, currentRequestType);
-                callResolver.start();
-
-                System.out.println("Got a request");
+                HTTPHandlerThread httpHandlerThread = new HTTPHandlerThread(endpoints, socket);
+                Thread thread = new Thread(httpHandlerThread);
+                thread.start();
             } catch (Exception e) {
                 System.out.println(e);
             }

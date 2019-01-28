@@ -2,13 +2,20 @@ package com.multiojuice.RaWsFramework.Resolvers;
 
 import com.multiojuice.RaWsFramework.RequestType;
 
-import java.net.Socket;
+import java.io.PrintWriter;
+
 
 public class HTTPMethodsResolver implements Resolver {
-    private Socket socket;
+    protected PrintWriter printWriter;
+    protected RequestType requestType;
+
+    public HTTPMethodsResolver(RequestType requestType, PrintWriter printWriter) {
+        this.requestType = requestType;
+        this.printWriter = printWriter;
+    }
 
     @Override
-    public void resolve(RequestType requestType) {
+    public void resolve() {
         switch (requestType) {
             case GET:
                 getResolve();
@@ -28,12 +35,20 @@ public class HTTPMethodsResolver implements Resolver {
         }
     }
 
-    public void setSocket(Socket socket) {
-        this.socket = socket;
+    public PrintWriter getPrintWriter() {
+        return printWriter;
     }
 
-    public Socket getSocket() {
-        return socket;
+    public void setPrintWriter(PrintWriter printWriter) {
+        this.printWriter = printWriter;
+    }
+
+    public RequestType getRequestType() {
+        return requestType;
+    }
+
+    public void setRequestType(RequestType requestType) {
+        this.requestType = requestType;
     }
 
     public void getResolve() {

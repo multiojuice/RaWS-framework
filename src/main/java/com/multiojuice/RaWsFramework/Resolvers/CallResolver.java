@@ -1,16 +1,14 @@
 package com.multiojuice.RaWsFramework.Resolvers;
 
-import com.multiojuice.RaWsFramework.RequestType;
 
-public class CallResolver extends Thread {
+public class CallResolver implements Runnable {
     private Resolver resolver;
-    private RequestType requestType;
-    public CallResolver(Resolver newResolver, RequestType newRequestType) {
-        resolver = newResolver;
-        requestType = newRequestType;
+
+    public CallResolver(Resolver resolver) {
+        this.resolver = resolver;
     }
 
     public void run() {
-        resolver.resolve(requestType);
+        resolver.resolve();
     }
 }

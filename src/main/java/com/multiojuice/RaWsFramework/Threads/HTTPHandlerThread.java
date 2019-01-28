@@ -2,24 +2,37 @@ package com.multiojuice.RaWsFramework.Threads;
 
 import com.multiojuice.RaWsFramework.RequestType;
 import com.multiojuice.RaWsFramework.Resolvers.CallResolver;
+import com.multiojuice.RaWsFramework.Resolvers.HTTPMethodsResolver;
 import com.multiojuice.RaWsFramework.Resolvers.Resolver;
 
+import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.net.ServerSocket;
+import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.HashMap;
 
-public class HTTPHandlerThread extends Thread{
+public class HTTPHandlerThread implements Runnable{
 
-    private ServerSocket server;
+    private Socket socket;
     private HashMap<String, Resolver> endpoints;
+    private InputStreamReader isr;
+    private BufferedReader reader;
+    private PrintWriter out;
+    private  BufferedOutputStream dataOut;
 
-    public HTTPHandlerThread(HashMap<String, Resolver> newEndpoints) {
-        endpoints = newEndpoints;
+
+    public HTTPHandlerThread(HashMap<String, Resolver> endpoints, Socket socket) {
+        this.endpoints = endpoints;
+        this.socket = socket;
+
         try {
-            server = new ServerSocket(8080);
-        } catch(Exception e) {
+            this.isr = new InputStreamReader(socket.getInputStream());
+            this.reader = new BufferedReader(isr);
+
+            this.out = new PrintWriter(socket.getOutputStream());
+            this.dataOut = new BufferedOutputStream(socket.getOutputStream());
+        } catch (Exception e) {
             System.out.println(e);
         }
     }
@@ -28,26 +41,29 @@ public class HTTPHandlerThread extends Thread{
     @Override
     public void run() {
         while (true) {
-            try (Socket socket = server.accept()) {
-                InputStreamReader isr = new InputStreamReader(socket.getInputStream());
-                BufferedReader reader = new BufferedReader(isr);
-
+            try {
                 String line = reader.readLine();
                 String[] splitLine = line.split("\\s+");
                 RequestType currentRequestType = getRequestTypeFromString(splitLine[0]);
 
                 getHeadersFromBR(reader);
                 Resolver neededResolver = endpoints.get(splitLine[1]);
-                System.out.println(endpoints);
-                CallResolver callResolver = new CallResolver(neededResolver, currentRequestType);
-                callResolver.start();
 
+                HTTPMethodsResolver httpMethodsResolver = (HTTPMethodsResolver) neededResolver;
+                httpMethodsResolver.setPrintWriter(out);
+                httpMethodsResolver.setRequestType(currentRequestType);
+
+                System.out.println(endpoints);
+
+                CallResolver callResolver = new CallResolver(httpMethodsResolver);
+                Thread thread = new Thread(callResolver);
                 System.out.println("Got a request");
             } catch (Exception e) {
                 System.out.println(e);
             }
         }
     }
+
 
     private HashMap<String, String> getHeadersFromBR(BufferedReader reader) {
         HashMap<String, String> headers = new HashMap<>();
@@ -64,6 +80,7 @@ public class HTTPHandlerThread extends Thread{
         }
         return headers;
     }
+
 
     private RequestType getRequestTypeFromString(String requestTypeString) {
         System.out.println(requestTypeString);
@@ -84,3 +101,4 @@ public class HTTPHandlerThread extends Thread{
         }
     }
 }
+
